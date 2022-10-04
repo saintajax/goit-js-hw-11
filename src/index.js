@@ -41,21 +41,20 @@ async function onFormSubmit(evt) {
   clearMarcup();
   addMarcup(marcup);
   onSuccess(totalHits);
+
   lightbox.refresh();
 }
 
 async function onLoadMoreBtnClick() {
   pageNumber += 1;
-
   const photos = await getPhotos(request);
   const {
     data: { hits },
   } = photos;
-
   const marcup = createMarcup(hits);
   addMarcup(marcup);
+  windowScroll();
   lightbox.refresh();
-
   if (totalPages === pageNumber) {
     classAddLoadMoreBtn();
     onEnd();
@@ -68,4 +67,14 @@ function classAddLoadMoreBtn() {
 
 function classRemoveLoadMoreBtn() {
   refs.loadMoreBtn.classList.remove('is-hidden');
+}
+
+function windowScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
