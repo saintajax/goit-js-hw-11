@@ -20,6 +20,8 @@ refs.loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 
 async function onFormSubmit(evt) {
   evt.preventDefault();
+  classAddLoadMoreBtn();
+  clearMarcup();
   pageNumber = 1;
   if (refs.form.elements.searchQuery.value) {
     request = refs.form.elements.searchQuery.value.trim();
@@ -33,7 +35,6 @@ async function onFormSubmit(evt) {
     return;
   }
   totalPages = Math.ceil(totalHits / limit);
-
   if (totalPages > 1) {
     classRemoveLoadMoreBtn();
   }
