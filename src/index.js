@@ -26,39 +26,44 @@ async function onFormSubmit(evt) {
   if (refs.form.elements.searchQuery.value) {
     request = refs.form.elements.searchQuery.value.trim();
   }
-  const photos = await getPhotos(request);
-  const {
-    data: { hits, totalHits },
-  } = photos;
-  if (totalHits === 0) {
-    onError();
-    return;
+  try {
+    const {
+      data: { hits, totalHits },
+    } = await getPhotos(request);
+    if (totalHits === 0) {
+      onError();
+      return;
+    }
+    totalPages = Math.ceil(totalHits / limit);
+    if (totalPages > 1) {
+      classRemoveLoadMoreBtn();
+    }
+    const marcup = createMarcup(hits);
+    clearMarcup();
+    addMarcup(marcup);
+    onSuccess(totalHits);
+    lightbox.refresh();
+  } catch (error) {
+    console.log(error);
   }
-  totalPages = Math.ceil(totalHits / limit);
-  if (totalPages > 1) {
-    classRemoveLoadMoreBtn();
-  }
-  const marcup = createMarcup(hits);
-  clearMarcup();
-  addMarcup(marcup);
-  onSuccess(totalHits);
-
-  lightbox.refresh();
 }
 
 async function onLoadMoreBtnClick() {
   pageNumber += 1;
-  const photos = await getPhotos(request);
-  const {
-    data: { hits },
-  } = photos;
-  const marcup = createMarcup(hits);
-  addMarcup(marcup);
-  windowScroll();
-  lightbox.refresh();
-  if (totalPages === pageNumber) {
-    classAddLoadMoreBtn();
-    onEnd();
+  try {
+    const {
+      data: { hits },
+    } = await getPhotos(request);
+    const marcup = createMarcup(hits);
+    addMarcup(marcup);
+    windowScroll();
+    lightbox.refresh();
+    if (totalPages === pageNumber) {
+      classAddLoadMoreBtn();
+      onEnd();
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 

@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { pageNumber, limit } from '../index.js';
-
+axios.defaults.baseURL = 'https://pixabay.com/api/';
 const API_KEY = '30362684-6931a6e7ba0508128f5876ff1';
-const baseUrl = 'https://pixabay.com/api/';
 
 export async function getPhotos(request) {
   const params = new URLSearchParams({
@@ -13,5 +12,5 @@ export async function getPhotos(request) {
     per_page: limit,
   });
 
-  return await axios.get(`${baseUrl}?${params}`);
+  return await axios.get(`?${params}`);
 }
